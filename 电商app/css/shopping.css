@@ -1,0 +1,233 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    width: 100%;
+    max-width: 540px;
+    min-width: 320px;
+    margin: 0 auto;
+    color: black;
+    overflow-x: hidden;
+    line-height: 1.42857143;
+    background-color: #F7F8FA;
+}
+/* main */
+.main{
+    margin: 15px;
+    border-radius: 8px;
+    background-color: white;
+    padding: 15px 15px 120px 15px;
+}
+.main .title{
+    height: 50px;
+    border-bottom: 1px solid #ccc;
+    line-height: 50px;
+    font-size: 18px;
+}
+.main .title i{
+    margin: 0px 5px;
+    font-size: 18px;
+}
+.main .title a{
+    float: right;
+    color: #7387BD;
+}
+
+/* li */
+
+.main .shopping li{
+    display: flex;
+    margin:20px 0px;
+    height: 100px;
+}
+/* 勾选框 */
+.shopping a{
+    display: block;
+}
+.shopping .choice{
+    height: 100px;
+    line-height: 100px;
+    width: 40px;
+    position: relative;
+    overflow: hidden;
+}
+.shopping .choice label,.choice_all label{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: url(../imgs/未勾选.png) no-repeat 0 0/cover;
+}
+.shopping .choice .checked{
+    background: url(../imgs/勾选.png) no-repeat 0 0/cover;
+
+}
+.shopping .choice input{
+    position: absolute;
+    top: 48px;
+    left: -16px;
+}
+
+
+/* 图片 */
+.shopping .item_pic{
+    display: block;
+    width: 100px;
+    height: 100px;
+    background-color: coral;
+}
+.shopping .item_pic img{
+    width: 100px;
+    height: 100px;
+}
+/* 详情 */
+.shopping .information{
+    flex: 1;
+    height: 100px;
+}
+.shopping .information{
+    position: relative;
+}
+.shopping .information p{
+    padding-left: 5px;
+    height: 45px;
+    color: #636869;
+    overflow: hidden;
+    line-clamp: 2;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.shopping .information span{
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    color: #509E85;
+    font-size: 20px;
+}
+.shopping .information .number{
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+.information .number button{
+    padding: 5px 10px;
+    border: none;
+    outline: none;
+}
+
+/* 结算栏 */
+.billing{
+    position: fixed;
+    bottom: 64px;
+    left: 0px;
+    width: 100%;
+    max-width: 540px;
+    min-width: 320px;
+    /* height: 50px; */
+    line-height: 50px;
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    padding: 5px 0px;
+}
+.billing .choice_all{
+    line-height: 50px;
+    overflow: hidden;
+    position: relative;
+}
+.billing .choice_all label{
+    position: relative;
+    top: 8px;
+}
+.billing .choice_all .checked{
+    background: url(../imgs/勾选.png) no-repeat 0 0/cover;
+
+}
+.billing .choice_all input{
+    position: absolute;
+    top: 0px;
+    left: -29px;
+}
+.billing .price span{
+    font-size: 20px;
+    color: #4FA584;
+    font-weight: bold;
+}
+.billing .go_btn button{
+    border-radius: 20px;
+    background-color: #4FA584;
+    color: white;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    border: none;
+    outline: none;
+}
+
+
+/* 未登录和购物车为空 */
+/* go_login   go_shopping*/
+.go_login ,.go_shopping{
+    width: 100%;
+}
+.go_login i ,.go_shopping i{
+    display: block;
+    text-align: center;
+    font-size: 120px;
+    color: #ccc;
+}
+.go_login p ,.go_shopping p{
+    color: black;
+    text-align: center;
+    margin: 10px 0px;
+}
+.go_shopping p:nth-child(3){
+    color: #ccc;
+}
+.go_login a , .go_shopping a{
+    display: block;
+    width: 80px;
+    margin: 0 auto;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    padding: 5px ;
+    background-color:#50A388;
+}
+.go_shopping a{
+    background-color: white;
+    color: #50A388;
+    border: 1px solid #50A388;
+}
+/* footer */
+.footer{
+    position: fixed;
+    bottom: -1px;
+    width:100%;
+    max-width: 540px;
+    min-width: 320px;
+    height: 65px;
+    display: flex;
+    margin-top: 30px;
+    padding: 10px 0px;
+    box-shadow: 0px -4px 3px rgba(0, 0, 0, 0.2);
+    background-color: white;
+}
+.footer a{
+    height: 45px;
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: black;
+
+}
+.footer a:nth-child(3) span ,.footer a:nth-child(3) i{
+    color:#58AC9D;
+}
+.footer a i{
+    font-size: 28px;
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购物车</title>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_3321985_ckja3zhx30a.css">
+    <link rel="stylesheet" href="css/shopping.css">
+    <link rel="stylesheet" href="css/base.css">
+    <script src='js/jquery-1.12.4.js'></script>
+</head>
+
+<body>
+    <!-- main -->
+    <div class="main">
+        <!-- title -->
+        <div class="title">
+            <i class="iconfont icon-gouwuche"></i>
+            <span>购物车</span>
+            <a href="#">编辑</a>
+        </div>
+        <!-- 购物车 -->
+        <div class="shopping">
+            <a>
+                <!-- 勾选框 -->
+                <div class="choice">
+                    <label for="agree"></label>
+                    <input type="checkbox" id="agree">
+                </div>
+                <!-- 图片 -->
+                <div class="item_pic"><img src="" alt=""></div>
+                <!-- 详情 -->
+                <div class="information">
+                    <p>米家互联网空调</p>
+                    <span>3478</span>
+                    <div class="number">
+                        <button class="subtract">-</button>
+                        <button class="numbers">1</button>
+                        <button class="plus">+</button>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- 结算栏 -->
+        <div class="billing">
+            <!-- 全选 -->
+            <div class="choice_all">
+                <label for="Agree"></label>
+                <input type="checkbox" id="Agree">
+                <span>全选</span>
+            </div>
+            <!-- 金额 -->
+            <div class="price">
+                合计: ¥
+                <span>23442</span>
+            </div>
+            <!-- 结算按钮 -->
+            <div class="go_btn">
+                <button>去结算(<span>1</span>)</button>
+            </div>
+        </div>
+    </div>
+    <!-- 底部栏 -->
+    <div class="footer">
+        <a href="index.html">
+            <i class="iconfont icon-shouye"></i>
+            <span>首页</span>
+        </a>
+        <a href="classify.html">
+            <i class="iconfont icon-fenlei"></i>
+            <span>分类</span>
+        </a>
+        <a href="shopping.html">
+            <i class="iconfont icon-gouwuche"></i>
+            <span>购物车</span>
+        </a>
+        <a href="">
+            <i class="iconfont icon-gerenzhongxin"></i>
+            <span>个人中心</span>
+        </a>
+    </div>
+    <!-- <i class="iconfont icon-gouwuche"></i> -->
+
+</body>
+<script>
+    $(function () {
+        // 读取并保存token
+        var token = window.sessionStorage.getItem('token');
+        console.log(token);
+
+        // 判断用户是否登录 否 跳转登录页
+        if (token == null) {
+            $('.main').html(' <div class="go_login"><i class="iconfont icon-gouwuche"></i><p>登录后才能看到您的购物车</p><a href="login.html">去登录</a></div>')
+        }
+        $.ajax({
+            type: 'get',
+            url: 'https://api.it120.cc/xiaochengxu/shopping-cart/info',
+            data: {
+                token: token,
+            },
+            success: function (data) {
+
+                console.log(data);
+                // 判断购物车是否为空 
+                if (data.msg == "success") {
+                    // 不为空 渲染购物车商品
+                    var str = '';
+                    for (var i = 0; i < data.data.items.length; i++) {
+                        var template = '<li><!-- 勾选框 --><div class="choice"><label for="check' + i + '" key="' + data.data.items[i].key + '"></label><input type="checkbox" id="check' + i + '"></div><!-- 图片 --><a href="product details.html?id=' + data.data.items[i].goodsId + '" class="item_pic"><img src="' + data.data.items[i].pic + '" alt=""></a><!-- 详情 --><div class="information"><p>' + data.data.items[i].name + '</p> <span price="' + data.data.items[i].price + '">¥' + data.data.items[i].price + '</span><div class="number"><button class="subtract" key="' + data.data.items[i].key + '">-</button><button class="numbers">' + data.data.items[i].number + '</button><button class="plus">+</button></div></div></li>'
+                        str += template;
+                    }
+                    // 渲染购物车商品列表
+                    $('.shopping').html(str);
+                    // 渲染总支付价格
+                    $('.price span').html(data.data.price);
+                    // 渲染总购买数量
+                    $('.go_btn span').html(data.data.number);
+
+                    // goodsStatus id遍历
+                    // for(var i = 0; i < data.data.goodsStatus.length; i++){
+                    //     var 
+                    // }
+
+                } else if (token) {
+                    // 购物车为空  去逛逛
+                    $('.main').html(' <div class="go_shopping"><i class="iconfont icon-gouwuche"></i><p>购物车快饿扁了 T.T</p><p>快给我挑点宝贝</p><a href="index.html">去逛逛</a></div>')
+                }
+            }
+
+        })
+        // 加 按钮  更改数量和价格
+        $('.shopping').on('click', '.plus', function () {
+            // console.log(123);
+            // 读取当前商品数量 计算
+            var m = $(this).prev().html();
+            m++;
+            console.log(m);
+            $(this).prev().html(m)
+            var key = $(this).prev().prev().attr('key');
+            // console.log(key);
+
+            $.ajax({
+                type: 'post',
+                url: 'https://api.it120.cc/xiaochengxu/shopping-cart/modifyNumber',
+                data: {
+                    number: m,
+                    token: token,
+                    key: key
+                },
+                success: function (data) {
+                    console.log(data);
+                    // 渲染总支付价格
+                    $('.price span').html(data.data.price);
+                    // 渲染总购买数量
+                    $('.go_btn span').html(data.data.number);
+                }
+            })
+        })
+
+        // 减 按钮  更改数量和价格
+        $('.shopping').on('click', '.subtract', function () {
+            var m = $(this).next().html();
+            if (m > 0) {
+                m--;
+            }
+            console.log(m);
+            $(this).next().html(m)
+            var key = $(this).attr('key');
+            // console.log(key);
+
+            $.ajax({
+                type: 'post',
+                url: 'https://api.it120.cc/xiaochengxu/shopping-cart/modifyNumber',
+                data: {
+                    number: m,
+                    token: token,
+                    key: key
+                },
+                success: function (data) {
+                    console.log(data);
+                    // 渲染总支付价格
+                    $('.price span').html(data.data.price);
+                    // 渲染总购买数量
+                    $('.go_btn span').html(data.data.number);
+                }
+            })
+        })
+
+
+        // 单选  勾选按钮状态
+        $('.shopping').on('click', 'label', function () {
+            $(this).toggleClass('checked')
+
+            // 声明阈值控制开关
+            var flag = true;
+            // 判断单选是否全部勾选  全部勾选完成  全选按钮亮
+            $('.shopping label').each(function (i, v) {
+                // console.log($(v).hasClass('checked'));
+                // console.log($(v));
+                // 更改阈值
+                if (!$(v).hasClass('checked')) {
+                    flag = false;
+                    return
+                }
+            })
+            if (flag) {
+                $('.choice_all label').addClass('checked')
+            } else {
+                $('.choice_all label').removeClass('checked')
+
+            }
+        })
+
+        // 全选按钮
+        $('.billing').on('click', 'label', function () {
+            $(this).toggleClass('checked')
+
+            // 一键全选  一键取消
+            if ($(this).hasClass('checked')) {
+                // console.log(1);
+                $('.choice label').addClass('checked')
+            } else {
+                $('.choice label').removeClass('checked')
+            }
+        })
+
+        // 编辑
+        $('.title a').click(function () {
+            $(this).html('完成')
+            $('.go_btn button').html('删除')
+            $('.price').html('')
+
+            // 购物车删除
+            $('.go_btn').on('click', 'button', function () {
+                // console.log('del');
+
+                // 判断已勾选商品 并取 key 值
+                var good_list = [];
+                $('.shopping label').each(function (i, v) {
+                    // console.log($(v).hasClass('checked'));
+
+                    if ($(v).hasClass('checked')) {
+                        v = $(v).attr('key')
+                        // console.log(v);
+                        good_list.push(v)
+                    }
+                })
+                good_list = good_list.toString();
+                console.log(good_list);
+
+                var key = $('.shopping label').hasClass('checked');
+                // console.log(key);
+
+                $.ajax({
+                    type: 'post',
+                    url: 'https://api.it120.cc/xiaochengxu/shopping-cart/remove',
+                    data: {
+                        token: token,
+                        key: good_list,
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        var str = '';
+                        for (var i = 0; i < data.data.items.length; i++) {
+                            var template = '<li><!-- 勾选框 --><div class="choice"><label for="check' + i + '" key="' + data.data.items[i].key + '"></label><input type="checkbox" id="check' + i + '"></div><!-- 图片 --><div class="item_pic"><img src="' + data.data.items[i].pic + '" alt=""></div><!-- 详情 --><div class="information"><p>' + data.data.items[i].name + '</p> <span price="' + data.data.items[i].price + '">¥' + data.data.items[i].price + '</span><div class="number"><button class="subtract" key="' + data.data.items[i].key + '">-</button><button class="numbers">' + data.data.items[i].number + '</button><button class="plus">+</button></div></div></li>'
+
+                            str += template;
+                        }
+                        // 渲染购物车商品列表
+                        $('.shopping').html(str);
+                        // 渲染总支付价格
+                        $('.price span').html(data.data.price);
+                        // 渲染总购买数量
+                        $('.go_btn span').html(data.data.number);
+                    }
+                })
+            })
+        })
+
+
+    })
+</script>
+
+</html>

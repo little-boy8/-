@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品详情</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_3321985_h5jthiqwtf5.css">
+    <link rel="stylesheet" href="css/product details.css">
+    <script src="js/jquery-1.12.4.js"></script>
+</head>
+
+<body>
+    <!-- main -->
+    <div class="main">
+        <!-- item -->
+        <div class="item">
+            <div class="item_pic" key="">
+                <img src="" alt="">
+            </div>
+            <div class="item_price">
+                <p>¥169.00</p>
+                <span>价格：<s>¥169.00</s></span>
+            </div>
+            <div class="item_information">
+                <p>小米手环4</p>
+                <span>我是帅帅虎我是帅帅虎我是帅帅虎我是帅帅虎我是帅帅虎我是帅帅虎我是帅帅虎我是帅帅虎我是帅帅虎我是帅帅虎我是帅帅虎</span>
+            </div>
+            <div class="courier">
+                <span>运费 包邮</span>
+                <span>剩余 93</span>
+            </div>
+        </div>
+        <!-- coupon -->
+        <a href="#" class="coupon">
+            领券
+            <span></span>
+        </a>
+        <!-- 商品详情 -->
+        <div class="Product_details">
+            <h3>商品详情</h3>
+            <div class="pic_ifo">
+
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="footer">
+        <div class="contact">
+            <a href="index.html">
+                <i class="iconfont icon-dianzan"></i>
+                <span>首页</span>
+            </a>
+            <a href="#">
+                <i class="iconfont icon-liaotian"></i>
+                <span>客服</span>
+            </a>
+            <a href="shopping.html">
+                <i class="iconfont icon-gouwuche"></i>
+                <span>购物车</span>
+            </a>
+        </div>
+        <div class="buy_box">
+            <a href="javascript:;" class="join">加入购物车</a>
+            <a href="javascript:;" class="go_buy">立即购买</a>
+        </div>
+    </div>
+    <!-- 模态框 -->
+    <div class="modal_box">
+        <!-- item_msg -->
+        <div class="item_msg">
+            <div class="msg_pic"><img src="" alt=""></div>
+            <div class="item_msg_left">
+                <p>苹果13</p>
+                <p>¥<span>1999~2999</span></p>
+                <p>剩余886</p>
+                <p>请选择 版本颜色</p>
+            </div>
+        </div>
+        <!-- item_classify -->
+        <div class="item_classify">
+            <p>版本</p>
+            <div class="classify">
+                <!-- <a href="javascript:;">6gb+128gb</a>
+                <a href="javascript:;">6gb+128gb</a>
+                <a href="javascript:;">6gb+128gb</a> -->
+            </div>
+        </div>
+        <!-- item_color -->
+        <div class="item_color">
+            <p>颜色</p>
+            <div class="color">
+                <a href="javascript:;">冰川蓝</a>
+                <a href="javascript:;">冰川蓝</a>
+                <a href="javascript:;">冰川蓝</a>
+
+            </div>
+        </div>
+        <!-- item_number -->
+        <div class="item_number">
+            <span>购买数量</span>
+            <div class="btn">
+                <button>-</button>
+                <button>1</button>
+                <button>+</button>
+            </div>
+            <button class="confirm">确定</button>
+        </div>
+    </div>
+</body>
+<script>
+    $(function () {
+        // 读取并保存token
+        var token = window.sessionStorage.getItem('token');
+        console.log(token);
+
+        // 读取商品id
+        var id = location.search.slice(4);
+        console.log(id);
+        $.ajax({
+            type: 'post',
+            url: 'https://api.it120.cc/xiaochengxu/shop/goods/detail',
+            data: {
+                id: id,
+                token: token,
+            },
+            success: function (data) {
+                console.log(data);
+                // 产品详情页 分门别类渲染
+
+                // pic 图片
+                $('.item_pic img').attr('src', '' + data.data.basicInfo.pic + '')
+                // price 价格
+                $('.item_price p').html(data.data.basicInfo.minPrice);
+                $('.item_price span s').html(data.data.basicInfo.originalPrice);
+                // 商品介绍
+                $('.item_information p').html(data.data.basicInfo.name);
+                $('.item_information span').html(data.data.basicInfo.characteristic);
+                // 商品详情
+                $('.pic_ifo').html(data.data.content);
+
+            }
+        })
+
+
+        // 领劵
+        $.ajax({
+            type: 'get',
+            url: 'https://api.it120.cc/xiaochengxu/discounts/coupons',
+            data: {
+                token: token
+            },
+            success: function (data) {
+                // console.log(data);
+            }
+
+        })
+
+        // 模态框
+        $('.buy_box').on('click', '.join', function () {
+            // 点击 加入购物车  显示模态框
+            $('.modal_box').slideDown()
+
+            // 点击确定 关闭模态框
+            $('.confirm').click(function () {
+                $('.modal_box').hide();
+            })
+            $.ajax({
+                type: 'get',
+                url: 'https://api.it120.cc/xiaochengxu/shop/goods/detail',
+                data: {
+                    id: id,
+                    token: token,
+                },
+                success: function (data) {
+                    console.log(data);
+                    // pic  图片
+                    $('.msg_pic img').attr('src', '' + data.data.basicInfo.pic + '')
+                    // 名字 价格 剩余 
+                    $('.item_msg_left p').eq(0).html(data.data.basicInfo.name);
+                    $('.item_msg_left p').eq(1).html(data.data.basicInfo.minPrice);
+                    $('.item_msg_left p').eq(2).html('剩余：' + data.data.basicInfo.stores + '');
+
+                    // 立即加入购物车  模态框渲染
+                    // 判断商品:  有版本有颜色  / 单有颜色  / 无版本无颜色  
+                    // 分门别类渲染
+                    if (data.data.properties && data.data.properties[0].name == '版本') {
+                        // 有版本
+                        var item_classify = data.data.properties[0];
+                        $('.item_classify p').html('' + item_classify.name + '')
+
+                        var str = '';
+                        for (var i = 0; i < item_classify.childsCurGoods.length; i++) {
+                            var template = '<a href="javascript:;">' + item_classify.childsCurGoods[i].name + '</a>'
+                            str += template;
+                        }
+                        $('.classify').html(str);
+
+                    } else {
+                        // 无版本
+                        $('.item_classify').hide();
+                    }
+
+                    // 颜色
+                    if (data.data.properties) {
+                        if (data.data.properties[0].name == '颜色') {
+                            // 无版本  有颜色
+                            var item_color = data.data.properties[0];
+                            $('.item_color p').html('' + item_color.name + '')
+                            var str = '';
+                            for (var i = 0; i < item_color.childsCurGoods.length; i++) {
+                                var template = '<a href="javascript:;">' + item_color.childsCurGoods[i].name + '</a>'
+                                str += template;
+                            }
+                            $('.color').html(str);
+                        } else {
+                            // 有版本 有颜色
+                            var item_color = data.data.properties[1];
+                            $('.item_color p').html('' + item_color.name + '')
+                            var str = '';
+                            for (var i = 0; i < item_color.childsCurGoods.length; i++) {
+                                var template = '<a href="javascript:;">' + item_color.childsCurGoods[i].name + '</a>'
+                                str += template;
+                            }
+                            $('.color').html(str);
+                        }
+                    } else {
+                        // 无版本  无颜色
+                        console.log('none');
+                        $('.item_color').hide();
+                    }
+                }
+            })
+        })
+
+        // 
+    })
+</script>
+
+</html>

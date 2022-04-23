@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登陆</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.css.map">
+    <script src="js/jquery-1.12.4.js"></script>
+    <script src="js/bootstrap.js"></script>
+</head>
+
+<body>
+    <!-- bg -->
+    <div class="banner">
+        <img src="imgs/登录注册_01.png" alt="">
+    </div>
+    <form action="javascript:;" class="">
+        <!-- 账户密码 -->
+        <div class="user_ipt">
+            <!-- 手机号 -->
+            <div class="number">
+                <i><img src="imgs/手机@2x.png" alt=""></i>
+                <input type="text" placeholder="请输入用户名">
+            </div>
+            <!-- 密码 -->
+            <div class="psd">
+                <i><img src="imgs/密码@2x.png" alt=""></i>
+                <input class="eye" type="password" placeholder="请输入密码">
+                <s class=""></s>
+            </div>
+            <a href="">忘记密码</a>
+        </div>
+        <!-- 登录 注册 -->
+        <div class="user_login">
+            <div class="login">
+                <!-- 模态框 -->
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary btn-lg btn-login" data-toggle="modal"
+                    data-target="#myModal">
+                    立即登录
+                </button>
+            </div>
+            <div class=" registered">
+                <p>还没有账号？<a href="registered.html">立即注册></a></p>
+            </div>
+        </div>
+        <!-- 社交媒体 -->
+        <div class="media">
+            <a href=""><img src="imgs/QQ@2x.png" alt=""></a>
+            <a href=""><img src="imgs/微信@2x.png" alt=""></a>
+            <a href=""><img src="imgs/微博@2x.png" alt=""></a>
+        </div>
+    </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">温馨提示</h4>
+                </div>
+                <div class="modal-body">
+                    请输入正确的用户名/密码
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    // 登录账户密码 ID和设备名字
+    console.log(13382019200,'a335006012A',16503594199396246947,'Nexus 5');
+    // 电商app登录
+    $('.login').on('click', function () {
+        var uName = $.trim($('.number>input').val());
+        var psd = $.trim($('.psd>input').val());
+        $.ajax({
+            type: 'post',
+            url: 'https://api.it120.cc/xiaochengxu/user/m/login',
+            data: {
+                mobile: uName,
+                pwd: psd,
+                deviceId:16503594199396246947,
+                deviceName:'Nexus 5'
+            },
+            success: function (data) {
+                console.log(data);
+                if(data.msg == 'success'){
+                 window.sessionStorage.setItem('token', data.data.token)
+                 window.open('index.html', '_self')
+                }else{
+                    $('#myModal').show()
+                }
+            }
+
+        })
+    })
+
+    // 教育app 切换小眼睛
+    $('.eye').next().click(function () {
+        $(this).toggleClass('eye_hide')
+        $(this).prev().attr('type', $(this).hasClass('eye_hide') ? 'text' : 'password')
+    })
+</script>
+
+</html>
